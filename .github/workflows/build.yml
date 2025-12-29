@@ -1,0 +1,49 @@
+name: Windows Build
+
+on:
+  push:
+    branches: [ "main", "master" ] # 当你推送到这些分支时触发
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: '6.5.3' # 建议和你本地 Qt 版本一致
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_msvc2019_64' # 使用 MSVC 编译器，比 MinGW 在 Windows 上稳
+
+    - name: Setup MSVC
+      uses: ilammy/msvc-dev-cmd@v1
+
+    - name: Configure CMake
+      run: |
+        cmake -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release
+
+    - name: Build
+      run: |
+        cmake --build build --config Release
+
+    - name: Run windeployqt
+      run: |
+        # 这一步极其重要，它会自动把运行所需的 dll 全部拷到 exe 旁边
+        windeployqt --release build/Release/SandboxQt.exe
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Sandbox-Windows-Build
+        path: |
+          build/Release/*.exe
+          build/Release/*.dll
+          build/Release/platforms/
+          build/Release/styles/
