@@ -24,7 +24,7 @@ struct Particle {
     int pressure = 0;
     bool updated = false;
     int8_t colorVariation = 0;
-    uint32_t color = 0x80FFFFFF;
+    uint32_t color = 0xFFFFFFFF;
 };
 
 class SandboxWorld final : public QObject {

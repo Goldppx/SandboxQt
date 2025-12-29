@@ -9,8 +9,8 @@ SandboxWorld::SandboxWorld(int w, int h) : width(w), height(h) {
 
     // 初始化为空气
     for (int i = 0; i < width * height; ++i) {
-        grid[i] = {ParticleType::Air, 0, false, 0, 0x80FFFFFF};
-        buffer[i] = 0x80FFFFFF;
+        grid[i] = {ParticleType::Air, 0, false, 0, 0xFFFFFFFF};
+        buffer[i] = 0xFFFFFFFF;
     }
 
     timer = new QTimer(this);
@@ -19,8 +19,8 @@ SandboxWorld::SandboxWorld(int w, int h) : width(w), height(h) {
 
 void SandboxWorld::clearWorld() {
     for (int i = 0; i < width * height; ++i) {
-        grid[i] = {ParticleType::Air,0,false,0,0x80FFFFFF};
-        buffer[i] = 0x80FFFFFF;
+        grid[i] = {ParticleType::Air,0,false,0,0xFFFFFFFF};
+        buffer[i] = 0xFFFFFFFF;
     }
     emit worldChanged();
 }
@@ -42,7 +42,7 @@ void SandboxWorld::setParticle(int x, int y, ParticleType type) {
 
 uint32_t SandboxWorld::calculateColor(const Particle &p) {
     // 快速处理空气
-    if (p.type == ParticleType::Air) return 0x80FFFFFF;
+    if (p.type == ParticleType::Air) return 0xFFFFFFFF;
 
     const int var = static_cast<unsigned char>(p.colorVariation);
     const int pres = p.pressure;
@@ -69,7 +69,7 @@ uint32_t SandboxWorld::calculateColor(const Particle &p) {
             return (0xFF000000) | (std::clamp(140 + var, 0, 255) << 16) |
                                  (std::clamp(54 + var, 0, 255) << 8) |
                                   std::clamp(54 + var, 0, 255);
-        default: return 0x80FFFFFF;
+        default: return 0xFFFFFFFF;
     }
 }
 

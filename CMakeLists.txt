@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.31.6)
 project(sandboxQt)
 
-add_compile_options(-O3)
+add_compile_options(-O2)
 #add_compile_options(-march=native)
 
 set(CMAKE_CXX_STANDARD 20)
